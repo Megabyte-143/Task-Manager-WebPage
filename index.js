@@ -10,7 +10,7 @@ const generateNewCard = (taskData) => `
   <div class="card">
   <div class="card-header d-flex justify-content-end gap-2">
    <button type="button" class="btn btn-outline-success"><i class="fas fa-pencil-alt"></i></button>
-  <button type="button" class="btn btn-outline-danger id=${taskData.id}" onclick="deleteCard.apply(this,arguments)" ><i class="fas fa-trash-alt" id=${taskData.id}></i></button>
+  <button type="button" class="btn btn-outline-danger id=${taskData.id}" onClick="deleteCard.apply(this,arguments)" ><i class="fas fa-trash-alt" id=${taskData.id}  ></i></button>
   </div>
   <div class="card-body">
   <img class="card-img-top" src=${taskData.imageUrl} alt="...">
@@ -42,18 +42,21 @@ const loadInitialCardData = () => {
 
 };
 
+//Delete Function
+
 const deleteCard = (event) => {
     event = window.event;
     const targetId = event.target.id;
     const tagname = event.target.tagName;
 
-    globalStore = globalStore.filter((cardObject)=> cardObject.id != targetId);
-    localStorage.setItem("tasky",JSON.stringify({cards:globalStore}));
+    globalStore = globalStore.filter((cardObject) => cardObject.id !== targetId);
+    localStorage.setItem("tasky", JSON.stringify({ cards: globalStore }));
 
-    if(tagname=="BUTTON")
-{
-    return taskContainer.removeChild(event.target.parent)
-}
+    if(tagname === "BUTTON") {
+        return taskContainer.removeChild(event.target.parentNode.parentNode.parentNode);
+      } else {
+        return taskContainer.removeChild(event.target.parentNode.parentNode.parentNode.parentNode);
+      }
 
 }
 
@@ -69,6 +72,7 @@ const saveChanges = () => {
 
 
     taskContainer.insertAdjacentHTML("beforeend", generateNewCard(taskData));
+    
     globalStore.push(taskData);
     localStorage.setItem("tasky", JSON.stringify({ cards: globalStore }));
 
